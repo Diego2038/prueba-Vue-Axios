@@ -77,6 +77,7 @@ export default {
 
       crearUsuario.post( './users',
         {
+          // Este es el body
           name: nombre,
           job: trabajo
         }).then( resp => {
