@@ -4,6 +4,9 @@ import axios from 'axios';
   <input type="text" placeholder="Password" v-model="password">
   <button @click="auth">Autenticar</button>
   <button @click="validate"> Validar si lo hice bien</button>
+  <button @click="getUsers">Obtener lista usuarios</button>
+  <input type="number" placeholder="Id usuario" v-model="idUsuarioSearch">
+  <button @click="getUser">Obtener Usuario</button>
   <textarea name="resultado" id="123" cols="30" rows="10" v-model="resultado1"></textarea>
 </template>
 
@@ -19,7 +22,8 @@ export default {
       // Autenticación
       resultado1 : null,
       email : "MagosDS2",
-      password : "Magos_DS2"
+      password : "Magos_DS2",
+      idUsuarioSearch : null,
     }
   },
 
@@ -102,6 +106,53 @@ export default {
           this.resultado1 = JSON.stringify( resp.data )
         })
         .catch( err => console.log( err ))
+
+    },
+
+    getUsers() {
+      const getUsers = axios.create({
+        baseURL : 'http://localhost:8000/api',
+        headers : {
+          Authorization : `Bearer ${ this.tokenAutenticacion }`
+        }
+      })
+
+      getUsers.get('./usuarios')
+        .then( resp => console.log( resp.data ))
+        .catch( err => console.log( err ))
+    },
+    
+    getUser() {
+      const getUser = axios.create({
+        baseURL : 'http://localhost:8000/api',
+        headers : {
+          Authorization : `Bearer ${ this.tokenAutenticacion }`
+        }
+      })  
+      console.log( this.idUsuarioSearch)
+      getUser.get(`./usuarios/${this.idUsuarioSearch}`)
+        .then( resp => console.log( resp ))
+
+ 
+
+      // Solución de Postman, tampoco funciona
+      // const config = {
+      //   method: 'get',
+      //   url: 'http://localhost:8000/api/usuarios/2',
+      //   headers: { 
+      //     'Authorization': `Bearer ${ this.tokenAutenticacion }`,
+      //     "Access-Control-Allow-Origin": "*"
+      //   }, 
+      // };
+
+      // axios(config)
+      // .then(function (response) {
+      //   console.log(JSON.stringify(response.data));
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });
+
 
     }
   }
