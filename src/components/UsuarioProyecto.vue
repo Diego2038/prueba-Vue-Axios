@@ -3,6 +3,7 @@ import axios from 'axios';
   <input type="text" placeholder="Email" v-model="email">
   <input type="text" placeholder="Password" v-model="password">
   <button @click="auth">Autenticar</button>
+  <button @click="validate"> Validar si lo hice bien</button>
   <textarea name="resultado" id="123" cols="30" rows="10" v-model="resultado1"></textarea>
 </template>
 
@@ -14,6 +15,7 @@ export default {
   
   data() {
     return {
+      tokenAutenticacion : null,
       // Autenticación
       resultado1 : null,
       email : "MagosDS2",
@@ -34,8 +36,9 @@ export default {
       } )
         .then( resp => {
           const {data} = resp
-          // console.log(  data )
-          this.resultado1 = JSON.stringify( data )
+          console.log( data )
+          this.resultado1 = JSON.stringify( this.tokenAutenticacion = data.tokens.access )
+          console.log( this.tokenAutenticacion)
         })
         .catch( err => console.log( err ))
 
@@ -80,9 +83,13 @@ export default {
       
     },
 
+    // OJO, este método debe de usarse cuando se haya utenticado
     validate() {
       const auth = axios.create({
-        baseURL : 'http://localhost:8000/api'
+        baseURL : 'http://localhost:8000/api',
+        headers : {
+          Authorization : `Bearer ${this.tokenAutenticacion}`
+        }
       })
 
       auth.get('./auth', {
@@ -90,6 +97,7 @@ export default {
         password : this.password
       })
         .then( resp => {
+          console.log( this.tokenAutenticacion)
           console.log(  resp )
           this.resultado1 = JSON.stringify( resp.data )
         })
