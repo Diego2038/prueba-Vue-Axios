@@ -1,24 +1,35 @@
 # 00-axios-vue-prueba
 
-## Project setup
+##  Nota importante
+Utilicé 2 páginas para probar las apis con vue (realmente no hay cambio en comparación con Vanilla Javascript).
+<br>
+https://reqres.in/
+<br>
+https://developers.giphy.com/ 
+
+
+## Para instalar todas las dependencias del package.json
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Para compilar y correr el código en el navegador
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+### Para compilar la versión de producción
 ```
 yarn build
 ```
 
-### Run your unit tests
+### Para hacer pruebas unitarias (aún no está implementado)
 ```
 yarn test:unit
 ```
 
-### Customize configuration
+### Customize configuration (porque este proyecto se creó con el comando )
+```
+vue create {nombre_proyecto}
+```
 See [Configuration Reference](https://cli.vuejs.org/config/).
