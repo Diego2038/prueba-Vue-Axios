@@ -7,6 +7,7 @@ https://reqres.in/
 <br>
 https://developers.giphy.com/ 
 
+Además, para conectar con el backend de prueba se presupone que debe estar en el puerto 8000 en el local host, y la dirección de este código estar en el localhost 8080
 
 ## Para instalar todas las dependencias del package.json
 ```

@@ -50,6 +50,7 @@
 
 <script>
 import axios from 'axios'
+const body = document.getElementsByTagName("body")[0];
 export default {
   name : 'entrada_simple',
 

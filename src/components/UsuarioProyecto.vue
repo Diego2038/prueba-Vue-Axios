@@ -8,6 +8,8 @@ import axios from 'axios';
   <input type="number" placeholder="Id usuario" v-model="idUsuarioSearch">
   <button @click="getUser">Obtener Usuario</button>
   <textarea name="resultado" id="123" cols="30" rows="10" v-model="resultado1"></textarea>
+
+  <button @click="createUser">Crear usuario</button>
 </template>
 
 <script>
@@ -21,7 +23,7 @@ export default {
       tokenAutenticacion : null,
       // Autenticación
       resultado1 : null,
-      email : "MagosDS2",
+      email : "magosds2@correounivalle.edu.co",
       password : "Magos_DS2",
       idUsuarioSearch : null,
     }
@@ -34,7 +36,7 @@ export default {
         baseURL : 'http://localhost:8000/api'
       })
 
-      auth.post('./auth', {
+      auth.post('./login/', {
         "email" : this.email,
         "password" : this.password
       } )
@@ -90,47 +92,75 @@ export default {
     // OJO, este método debe de usarse cuando se haya utenticado
     validate() {
       const auth = axios.create({
-        baseURL : 'http://localhost:8000/api',
+        baseURL : 'http://localhost:8080/api',
         headers : {
-          Authorization : `Bearer ${this.tokenAutenticacion}`
+          Authorization : `Bearer ${this.tokenAutenticacion}` 
         }
       })
 
-      auth.get('./auth', {
+      auth.get('./login', {
         email : this.email,
         password : this.password
       })
         .then( resp => {
           console.log( this.tokenAutenticacion)
-          console.log(  resp )
+          console.log(  resp.data.user )
           this.resultado1 = JSON.stringify( resp.data )
         })
         .catch( err => console.log( err ))
 
+
+
+
+      /** --------  */
+
+      // var axios = require('axios');
+      // var data = JSON.stringify({
+      //   "email": "MagosDS2",
+      //   "password": "Magos_DS2"
+      // });
+
+      // var config = {
+      //   method: 'get',
+      //   url: 'http://localhost:8080/api/login',
+      //   headers: { 
+      //     'Authorization': `Bearer ${this.tokenAutenticacion}` , 
+      //     'Content-Type': 'application/json'
+      //   },
+      //   data : data
+      // };
+
+      // axios(config)
+      // .then(function (response) {
+      //   console.log(JSON.stringify(response.data));
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });
     },
 
     getUsers() {
       const getUsers = axios.create({
-        baseURL : 'http://localhost:8000/api',
+        baseURL : 'http://localhost:8080/api',
         headers : {
           Authorization : `Bearer ${ this.tokenAutenticacion }`
         }
       })
 
-      getUsers.get('./usuarios')
+      getUsers.get('./users/')
         .then( resp => console.log( resp.data ))
         .catch( err => console.log( err ))
     },
     
     getUser() {
       const getUser = axios.create({
-        baseURL : 'http://localhost:8000/api',
+        baseURL : 'http://localhost:8080/api',
         headers : {
           Authorization : `Bearer ${ this.tokenAutenticacion }`
         }
       })  
       console.log( this.idUsuarioSearch)
-      getUser.get(`./usuarios/${this.idUsuarioSearch}`)
+      getUser.get(`./users/${this.idUsuarioSearch}`)
         .then( resp => console.log( resp ))
 
  
@@ -154,7 +184,31 @@ export default {
       // });
 
 
+    },
+
+    createUser() {
+      const createUser = axios.create({
+        baseURL : 'http://localhost:8080/api',
+        headers : {
+          Authorization : `Bearer ${ this.tokenAutenticacion }`
+        }
+      })
+
+      createUser.post('./users/', {
+        "username":"ocioman123@correounivalle.edu.co",
+        "first_name":"Miguel",
+        "last_name":"Tristan",
+        "email":"ocioman123@correounivalle.edu.co",
+        "rol":"asociado",
+        "password":"bajolalupa321",
+        "fechaNacimiento":"2000-02-01",
+        "documento" : "1133567345"
+      })
+        .then( resp => console.log( resp.data )
+        )
+
     }
+
   }
 }
 </script>
