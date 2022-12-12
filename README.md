@@ -9,6 +9,9 @@ https://developers.giphy.com/
 
 Además, para conectar con el backend de prueba se presupone que debe estar en el puerto 8000 en el local host, y la dirección de este código estar en el localhost 8080
 
+## Link del backend donde se realizaron las respectivas pruebas
+https://github.com/JFOZ1010/backend-django
+
 ## Para instalar todas las dependencias del package.json
 ```
 yarn install

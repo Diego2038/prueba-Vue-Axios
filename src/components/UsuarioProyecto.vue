@@ -1,15 +1,36 @@
 import axios from 'axios';
 <template>
-  <input type="text" placeholder="Email" v-model="email">
-  <input type="text" placeholder="Password" v-model="password">
+  <h1> Registro, validación y lectura de Usuario</h1>
+  <h6><b>Nota: </b>Las casillas en verde son aquellas donde está permitido modificar la información (los demás son valores redundantes de los principales)</h6>
+  <input type="text" placeholder="Email" v-model="email" class="permitidoModificar">
+  <input type="text" placeholder="Password" v-model="password" class="permitidoModificar">
   <button @click="auth">Autenticar</button>
   <button @click="validate"> Validar si lo hice bien</button>
   <button @click="getUsers">Obtener lista usuarios</button>
-  <input type="number" placeholder="Id usuario" v-model="idUsuarioSearch">
+  <input type="number" placeholder="Id usuario" v-model="idUsuarioSearch" class="permitidoModificar">
   <button @click="getUser">Obtener Usuario</button>
-  <textarea name="resultado" id="123" cols="30" rows="10" v-model="resultado1"></textarea>
+  <textarea name="resultado" id="123" cols="30" rows="10" v-model="resultado1" readonly></textarea>
 
+  <hr>
+  <h1>Registro y modificación de Usuario</h1>
+  <div>
+    <input type="number" placeholder="Id Usuario" :value="idUsuarioSearch" readonly> 
+    <input type="text" placeholder="username" readonly onmousedown="return false" :value="email" >
+    <input type="text" placeholder="nombre" v-model="nombre" class="permitidoModificar">
+    <input type="text" placeholder="apellido" v-model="apellido" class="permitidoModificar"> 
+    <input type="email" placeholder="email" readonly onmousedown="return false" :value="email">   
+    <input type="password" placeholder="Password" readonly onmousedown="return false" :value="password">  
+    <input type="text" placeholder="documento" v-model="documento" class="permitidoModificar">   
+    <select name="Rol" id="rol" v-model="rol" class="permitidoModificar"> 
+      <option value="asociado">Asociado</option>
+      <option value="admin">Administrador</option>
+      <option value="cliente">Cliente</option>
+    </select> 
+    <input type="date" v-model="fechaNacimiento" class="permitidoModificar">
+  </div>
   <button @click="createUser">Crear usuario</button>
+  <button @click="modifyUser">Modificar usuario</button>
+
 </template>
 
 <script>
@@ -23,9 +44,18 @@ export default {
       tokenAutenticacion : null,
       // Autenticación
       resultado1 : null,
+
+      // Atributos de usuario
       email : "magosds2@correounivalle.edu.co",
       password : "Magos_DS2",
-      idUsuarioSearch : null,
+      nombre : "",
+      apellido : "",
+      //username : this.email, // se obvia porque se repite con el email, es temporal
+      documento : "",
+      rol : "",
+      idUsuarioSearch : "",
+      fechaNacimiento : "",
+
     }
   },
 
@@ -195,24 +225,83 @@ export default {
       })
 
       createUser.post('./users/', {
-        "username":"ocioman123@correounivalle.edu.co",
-        "first_name":"Miguel",
-        "last_name":"Tristan",
-        "email":"ocioman123@correounivalle.edu.co",
-        "rol":"asociado",
-        "password":"bajolalupa321",
-        "fechaNacimiento":"2000-02-01",
-        "documento" : "1133567345"
+        "username": this.email,
+        "first_name": this.nombre,
+        "last_name": this.apellido,
+        "email": this.email,
+        "rol": this.rol,
+        "password": this.password,
+        "fechaNacimiento": this.fechaNacimiento,
+        "documento" : this.documento
       })
         .then( resp => console.log( resp.data )
         )
+        .catch( err => console.log( err ))
+
+    },
+
+    // Para modificar el usuario, se necesitan 5 atributos del usuario:
+    // username
+    // email
+    // password
+    // rol
+    // documento
+    modifyUser() {
+      // const modifyUser = axios.create({
+      //   baseURL: 'http://localhost:8080/api/users',
+      //   headers : {
+      //     Authorization: `Bearer ${ this.tokenAutenticacion }`
+      //   }
+      // })
+      const apellido = (this.apellido.trim()) ? `"last_name" : "${this.apellido}",` : ""
+      const nombre = (this.nombre.trim()) ? `"first_name" : "${this.nombre}",` : ""
+      const id = (this.idUsuarioSearch) ? `"id" : ${this.idUsuarioSearch},` : "" 
+      const fecha = (this.fechaNacimiento.trim()) ? `"fechaNacimiento" : "${ this.fechaNacimiento}",` : ""
+      let jsonCambios = `{` +
+        apellido +
+        nombre +
+        id +
+        fecha  +
+        `"username" : "${this.email}",` +
+        `"email" : "${this.email}",` +
+        `"password" : "${this.password}",` +
+        `"rol" : "${this.rol}" ,` +
+        `"documento" : "${ this.documento}"` +
+        "}" 
+
+      console.log( jsonCambios)
+      // console.log( JSON.parse(jsonCambios) )
+
+    //   modifyUser.put(`./modify/${this.idUsuarioSearch}`, jsonCambios)
+    //     .then( resp => console.log( resp.data ))
+    //     .catch( err => console.log( err ))
+    // }
+
+      // Código sacado de Postman
+      const configuracion = {
+        method: 'put',
+        url: `http://localhost:8080/api/users/modify/${this.idUsuarioSearch}`,
+        headers: { 
+          'Authorization': `Bearer ${this.tokenAutenticacion}`, 
+          'Content-Type': 'application/json'
+        },
+        data : jsonCambios
+      }
+
+      axios( configuracion )
+        .then( resp => console.log( resp ))
+        .catch( err => console.log( err))
+
 
     }
-
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+  .permitidoModificar {
+    background-color: greenyellow;
+    color: #401212;
+    font-weight: 550;
+  }
 </style>
